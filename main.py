@@ -12,7 +12,12 @@ b = 4.5
 
 
 def y_hat(x ,y, w, b):
-    yhat = np.zeros
+    yhat = np.zeros(x)
+    m = x.shape[0]
+    for i in range(m):
+        yhat[i] = w * x[i] + b
+        
+    return yhat 
 # Define the cost function that computes the mean squared error
 def compute_cost(x, y, w, b):
     m = x.shape[0]    # Get the number of training examples

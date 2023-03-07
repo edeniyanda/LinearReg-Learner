@@ -1,46 +1,66 @@
-# Import required libraries
-import numpy as np
+# Import the required libraries
+import numpy as np 
 import matplotlib.pyplot as plt
 
-# Define the input feature and output label for the training data
-x_train = np.array([2,5,6,7,8,11,14,16,18,20,24])
-y_train = np.array([12,17,20,25,29,32,36,43,51,54,60])
+# Define the training data points
+x_train = np.array([1.0, 2.0])
+y_train = 2*x_train + 4
 
-# Set the initial values of slope and intercept
+# Set the initial values for the slope and the intercept
 w = 3
-b = 5
+b = 4.5
 
-# Define a function to compute the predicted output based on the input feature, slope and intercept
-def y_hat(x, w, b):
-    return w * x + b
+# Define the cost function that computes the mean squared error
+def compute_cost(x, y, w, b):
+    m = x.shape[0]    # Get the number of training examples
+    cost = 0          # Initialize the cost to zero
+    
+    # Compute the cost for each training example
+    for i in range(m):
+       f_wb = (w * x[i] + b) - y[i]   # Compute the predicted value for the current example
+       cost += (f_wb) ** 2            # Add the squared error to the cost
+    
+    total_cost = (1 / (2 * m)) * cost  # Compute the average cost
+    
+    return total_cost
 
-# Define a function to compute the mean squared error between the predicted output and the actual output
-def cost_function(x, y, w, b):
-    y_pred = y_hat(x_train, w, b)
-    return np.mean(np.square( y_pred - y))
 
-# Set the learning rate for the gradient descent algorithm
-learning_rate = 0.01   
+# Define the gradient function that computes the partial derivatives of the cost function with respect to w and b
+def compute_gradient(x,y,w,b):
+    m = x.shape[0]    # Get the number of training examples
+    djdw = 0           # Initialize the partial derivative of the cost with respect to w to zero
+    djdb = 0           # Initialize the partial derivative of the cost with respect to b to zero
+    
+    # Compute the partial derivatives of the cost function for each training example
+    for i in range(m):
+        f_wb = w * x[i] + b             # Compute the predicted value for the current example
+        djdwi = (f_wb - y[i]) * x[i]    # Compute the partial derivative of the cost with respect to w
+        djdbi = (f_wb - y[i])           # Compute the partial derivative of the cost with respect to b
+        djdw += djdwi                   # Add the partial derivative to the total partial derivative with respect to w
+        djdb += djdbi                   # Add the partial derivative to the total partial derivative with respect to b
+    
+    djdw = djdw * (1 / m)               # Compute the average partial derivative with respect to w
+    djdb = djdb * (1 / m)               # Compute the average partial derivative with respect to b
+    
+    return djdw, djdb
 
-# Run the gradient descent algorithm for 400 iterations
-for i in range(400):
-    # Compute the gradients of the cost function with respect to the slope and intercept
-    dw = np.mean((y_hat(x_train, w, b) - y_train) * x_train)
-    db = np.mean((y_hat(x_train, w, b) - y_train))
+
+# Set the learning rate
+learning_rate = 0.09
+
+# Train the model
+for iter in range(400):
+    cost = compute_cost(x_train, y_train, w, b)    # Compute the cost for the current parameters
+    
+    # Print the current cost and the current parameter values
+    print(f'{iter}: cost:{cost}, parameter: w = {w}, b = {b}')
+    
+    dw, db = compute_gradient(x_train, y_train, w, b)   # Compute the gradients with respect to w and b
     
     # Update the slope and intercept based on the gradients and the learning rate
-    w = w - dw * learning_rate
-    b = b - db * learning_rate
-    
-    # Compute the cost function and print it to monitor the progress of the optimization
-    cost = cost_function(x_train, y_train, w, b)
-    print(f"Iteration {i}: Cost = {cost}, w = {w}, b = {b}")
-       
-# Visualize the trained model
-plt.plot(x_train, y_hat(x_train, w, b), label="Training Model", color="red")
-plt.scatter(x_train, y_train, c="g", marker="+", label="Training Data")
-plt.title("A sample Train model")
-plt.xlabel("Feature")
-plt.ylabel("Label")
-plt.legend()
-plt.show()
+    w = w - learning_rate * dw
+    b = b - learning_rate * db
+
+
+# if __name__ == "__main__":
+#     print(compute_cost(x_train, y_train, w, b))

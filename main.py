@@ -10,6 +10,9 @@ y_train = 2*x_train + 4
 w = 3
 b = 4.5
 
+
+def y_hat(x ,y, w, b):
+    yhat = np.zeros
 # Define the cost function that computes the mean squared error
 def compute_cost(x, y, w, b):
     m = x.shape[0]    # Get the number of training examples
@@ -48,6 +51,7 @@ def compute_gradient(x,y,w,b):
 # Set the learning rate
 learning_rate = 0.09
 
+sgd = 2
 # Train the model
 for iter in range(400):
     cost = compute_cost(x_train, y_train, w, b)    # Compute the cost for the current parameters
@@ -60,7 +64,24 @@ for iter in range(400):
     # Update the slope and intercept based on the gradients and the learning rate
     w = w - learning_rate * dw
     b = b - learning_rate * db
+    
+    if cost < sgd:
+        bw = w
+        bb = b
+        
 
+print(f"Best parameters: w = {bw}, b = {bb}")
+
+
+
+# Visualize the trained model
+plt.plot(x_train, y_hat(x_train, bw, bb), label="Training Model", color="red")
+plt.scatter(x_train, y_train, c="g", marker="+", label="Training Data")
+plt.title("A sample Training model")
+plt.xlabel("Feature")
+plt.ylabel("Label")
+plt.legend()
+plt.show()
 
 # if __name__ == "__main__":
 #     print(compute_cost(x_train, y_train, w, b))

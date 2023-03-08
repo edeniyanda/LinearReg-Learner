@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Define the training data points
-x_train = np.array([1.0, 2.0])
+x_train = np.array([1.0, 2.0, 4.0, ])
 y_train = 2*x_train + 4
 
 # Set the initial values for the slope and the intercept
@@ -80,7 +80,7 @@ print(f"Best parameters: w = {bw}, b = {bb}")
 
 
 # Visualize the trained model
-plt.plot(x_train, y_hat(x_train, bw, bb), label="Training Model", color="red")
+plt.plot(x_train, y_hat(x_train, y_train, bw, bb), label="Training Model", color="red")
 plt.scatter(x_train, y_train, c="g", marker="+", label="Training Data")
 plt.title("A sample Training model")
 plt.xlabel("Feature")
